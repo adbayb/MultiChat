@@ -7,7 +7,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Vector;
 
-import controller.Main.MyLogger;
+import controller.MyLogger;
 
 final class Service implements Runnable{
 	

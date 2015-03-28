@@ -8,7 +8,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.util.Iterator;
 
-import controller.Main.MyLogger;
+import controller.MyLogger;
 
 public class ServerNIO extends AbstractMultichatServer implements MultichatServer, Runnable {
 	private ServerSocketChannel serveurSocketChannel;

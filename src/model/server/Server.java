@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.Vector;
 
-import controller.Main.MyLogger;
+import controller.MyLogger;
 
 public class Server extends AbstractMultichatServer implements MultichatServer, Runnable {
 	private ServerSocket serveurSocket;
@@ -18,7 +18,6 @@ public class Server extends AbstractMultichatServer implements MultichatServer, 
 	public Server(InetAddress address, Integer port) throws IOException {
 		super(address,port);
 		//ServerSocket bind automatiquement sur le port et l'addresse du serveur:
-		//this.serveurSocket = new ServerSocket(port);
 		//this.serveurSocket = new ServerSocket(port);
 		this.serveurSocket = new ServerSocket();
 		this.serveurIPSocket = new InetSocketAddress(address, port);

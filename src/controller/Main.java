@@ -1,26 +1,17 @@
 package controller;
 
-import java.io.IOException;
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
-import org.apache.log4j.ConsoleAppender;
-import org.apache.log4j.FileAppender;
-import org.apache.log4j.Level;
-import org.apache.log4j.Logger;
-import org.apache.log4j.SimpleLayout;
-import org.apache.log4j.xml.XMLLayout;
-
+import controller.client.MainClient;
+import controller.server.MainServer;
 import gnu.getopt.Getopt;
 import javafx.application.Application;
-import javafx.stage.Stage;
 
 //Application pour JAVAFX: GUI seulement pour client (cf package view):
-public class Main extends Application {
+public class Main {
 	private static int PORT = 10000;
 	private static String HOST = "localhost"; 
 	
-	private final static String msgHelp = "Usage : java -jar target / multichat -0.0.1 - SNAPSHOT .jar [ OPTION ]...\n" +
+	private final static String msgHelp = 
+			"Usage : java -jar target / multichat -0.0.1 - SNAPSHOT .jar [ OPTION ]...\n" +
 			"-a, -- address = ADDR set the IP address\n"+
 			"-d, --debug display error messages\n"+
 			"-h, --help display help and quit\n"+
@@ -85,84 +76,26 @@ public class Main extends Application {
 		}
 		else{
 			MyLogger.init(true);
-		}		
-		
+		}
+	
 		if(client){
-			new AppClient(HOST,PORT).execute();
+			//new AppClient(HOST,PORT).execute();
+			MainClient.setHOST(HOST);
+			MainClient.setPORT(PORT);
+			Application.launch(MainClient.class,args);
 		}		
 		else if(server){
+			MainServer.setHOST(HOST);
+			MainServer.setPORT(PORT);
 			if(!nio){
 				//option -s pour lancer serveur (par défaut sans NIO):
-				try {
-					new AppServer(PORT, InetAddress.getByName(HOST)).execute();
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
-					MyLogger.errorMessage(e.getMessage());
-				}
+				MainServer.main();
 				
 			}
 			else{	
 				//-s -n pour lancer un serveur NIO:
-				try {
-					new AppServer(PORT, InetAddress.getByName(HOST)).executeNIO();
-				} catch (UnknownHostException e) {
-					// TODO Auto-generated catch block
-					MyLogger.errorMessage(e.getMessage());
-				}		
+				MainServer.mainNIO();		
 			}			
 		}
     }
-
-	@Override
-	public void start(Stage primaryStage) throws Exception {
-		// TODO Auto-generated method stub
-		
-	}
-	
-	public static final class MyLogger {
-		
-		public static Logger logRoot = Logger.getRootLogger();
-		private static boolean consoleMsg = false;	
-		private static ConsoleAppender ca;
-		FileAppender fa;
-		
-		public static void init(boolean infile){
-			if(!infile){
-				ca = new ConsoleAppender();
-				ca.setLayout(new SimpleLayout());
-				ca.activateOptions();
-				logRoot.addAppender(ca);
-				logRoot.setLevel(Level.ERROR);				
-			}
-			else{
-				try {
-					FileAppender fa = new FileAppender(new XMLLayout(), "log.txt");
-					fa.setName("FichierLog");
-					logRoot.addAppender(fa);
-				} catch (SecurityException e) {
-					// TODO Auto-generated catch block
-					MyLogger.errorMessage(e.getMessage());
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					MyLogger.errorMessage(e.getMessage());
-				}				
-			}
-
-		}		
-		
-		public static final void errorMessage(String message){
-			logRoot = Logger.getLogger("MultiChat Logger");
-			logRoot.error(message);
-		}
-
-		public static boolean isConsoleMsg() {
-			return consoleMsg;
-		}
-
-		public static void setConsoleMsg(boolean consoleMsg) {
-			MyLogger.consoleMsg = consoleMsg;
-		}
-		
-		
-	}
 }

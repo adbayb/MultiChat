@@ -3,36 +3,67 @@ package model.client;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Client implements Runnable{
+import javafx.scene.control.TextArea;
+
+public class Client {
+	//Un client est définit par les services de lecture et Ecriture 
+	private ReceptionService lecture;
+	private EmissionService ecriture;
+	//Un client est également définit par une fenêtre de données contenant l'ensemble des Output/Input:
+	private TextArea windowChat;
+	private Socket socket;
 	
-	private Reception lecture;
-	private Emission ecriture;
-	private IHM IHM;
-	
-	public Client(Socket s) throws IOException{
-		setIHM(new IHM());
-		lecture = new Reception(s.getInputStream());	//socket permettant la lecture des messages venant du serveur d�di�
-		// Cree les threads pour communiquer avec le service se trouvant sur la
-		// machine host au port PORT
-		ecriture = new Emission(s.getOutputStream());	//socket permettant l'envoi de messages au serveur d�di�		
+	public Client(Socket socket, TextArea windowChat) throws IOException {
+		this.socket = socket;
+		//Lecture implémente Runnable car la lecture est bloquante:
+		//socket permettant la lecture des messages venant du serveur dédié:
+		lecture = new ReceptionService(this.socket.getInputStream(),windowChat);
+		//socket Client permettant l'envoi de messages au serveur dédié
+		ecriture = new EmissionService(this.socket.getOutputStream());		
 	}
 	
-	@Override
-	public void run() {	
-		lecture.lancer();
-		ecriture.lancer();
-	}	
+	public void launch() {
+		//l'écriture sera reçu via un listener (cf AddInputClient.java):
+		lecture.lancer();			
+	}
 	
-	public void lancer() {
-		(new Thread(this)).start();			
+	public void stop() throws IOException {
+		this.lecture.stop();
+		this.socket.shutdownOutput();
+		this.socket.shutdownInput();
+		this.socket.close();
 	}
 
-	public IHM getIHM() {
-		return IHM;
+	public ReceptionService getLecture() {
+		return lecture;
 	}
 
-	public void setIHM(IHM iHM) {
-		IHM = iHM;
+	public void setLecture(ReceptionService lecture) {
+		this.lecture = lecture;
+	}
+
+	public EmissionService getEcriture() {
+		return ecriture;
+	}
+
+	public void setEcriture(EmissionService ecriture) {
+		this.ecriture = ecriture;
+	}
+
+	public TextArea getWindowChat() {
+		return windowChat;
+	}
+
+	public void setWindowChat(TextArea windowChat) {
+		this.windowChat = windowChat;
+	}
+
+	public Socket getSocket() {
+		return socket;
+	}
+
+	public void setSocket(Socket socket) {
+		this.socket = socket;
 	}
 	
 }

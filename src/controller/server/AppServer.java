@@ -1,10 +1,10 @@
-package controller;
+package controller.server;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-import controller.Main.MyLogger;
+import controller.MyLogger;
 import model.server.Server;
 import model.server.ServerNIO;
 
@@ -13,7 +13,7 @@ public class AppServer {
 	private Server serveur;
 	private InetAddress serverAddr;
 	
-	public AppServer(int port, InetAddress serverAddr){
+	public AppServer(InetAddress serverAddr, int port) {
 		this.port = port;
 		this.serveur = null;
 		try {
@@ -35,7 +35,7 @@ public class AppServer {
 			this.serveur = new Server(serverAddr, this.port);
 			serveur.start();
 		} catch (IOException e) {
-			MyLogger.errorMessage("Error Server Creation on Port [" + this.port + "] " +  e);
+			MyLogger.errorMessage("Error Server Creation on Port [" + this.port + "] " +  e);			
 		}
 		
 		return;
@@ -47,7 +47,7 @@ public class AppServer {
 			ServerNIO serveurNIO = new ServerNIO(serverAddr, this.port);
 			serveurNIO.start();
 		} catch (IOException e) {
-			MyLogger.errorMessage("Error Server Creation on Port [" + this.port + "] " +  e);
+			MyLogger.errorMessage("Error Server Creation on Port [" + this.port + "] " +  e);			
 		}
 		
 		return;

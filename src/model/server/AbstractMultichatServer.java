@@ -10,6 +10,7 @@ public abstract class AbstractMultichatServer {
 	
 	AbstractMultichatServer(InetAddress address, Integer port) throws IOException {
 		this.servicesCli = new Vector<Service>();
+		System.out.println("Server Initialized ["+address+":"+port+"]");
 	}
 	
 	public Vector<Socket> getAutresClients() {
