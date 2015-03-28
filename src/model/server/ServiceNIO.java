@@ -55,8 +55,9 @@ public class ServiceNIO {
 				System.out.print(msgRecuString);
 				if(msgRecuString.toLowerCase().contains("/nick ") == true) {
 					//On attache le pseudo au channel:
-					//6 correspond à la taille de "/nick ": on ne garde que le pseudo dans la map (+suppression de "\n"):
-					String nickname = msgRecuString.substring(6, msgRecuString.length()-2);
+					//on ne garde que le pseudo dans la map (+suppression de "\n"):
+					//String nickname = msgRecuString.substring(6, msgRecuString.length()-2);
+					String nickname = msgRecuString.replaceAll("(.*)/nick (.*)(\n)","$2");
 					this.clientsNick.put(socketChannel, nickname);
 					System.out.println("Added Nickname: "+nickname);
 				}
