@@ -1,4 +1,4 @@
-package client;
+package model.client;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -19,8 +19,7 @@ public class Emission implements Runnable{
 	public void lancer() {
 		(new Thread(this)).start();			
 	}	
-
-	@SuppressWarnings("static-access")
+	
 	public void run() {		
 		String line;
 		sout.println("*** Un client" /*+ user.getLogin()*/ + " vient de se connecter***");

@@ -1,4 +1,4 @@
-package client;
+package model.client;
 
 import java.util.Scanner;
 

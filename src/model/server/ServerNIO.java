@@ -1,4 +1,4 @@
-package serveur;
+package model.server;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -17,7 +17,7 @@ public class ServerNIO extends AbstractMultichatServer implements MultichatServe
 	
 	// Cree un serveur TCP - objet de la classe ServerSocket
 	// Puis lance le thread du serveur.
-	ServerNIO(InetAddress address, Integer port) throws IOException {
+	public ServerNIO(InetAddress address, Integer port) throws IOException {
 		super(address,port);
 		
 		//Initialisation de notre selector et de notre channel non bloquant associé à notre serveur:

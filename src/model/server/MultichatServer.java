@@ -1,4 +1,4 @@
-package serveur;
+package model.server;
 
 public interface MultichatServer {
 	public void start();

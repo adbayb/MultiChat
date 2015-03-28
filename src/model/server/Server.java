@@ -1,4 +1,4 @@
-package serveur;
+package model.server;
 
 import java.io.IOException;
 import java.net.InetAddress;
@@ -13,7 +13,7 @@ public class Server extends AbstractMultichatServer implements MultichatServer, 
 	
 	// Cree un serveur TCP - objet de la classe ServerSocket
 	// Puis lance le thread du serveur.
-	Server(InetAddress address, Integer port) throws IOException {
+	public Server(InetAddress address, Integer port) throws IOException {
 		super(address,port);
 		//ServerSocket bind automatiquement sur le port et l'addresse du serveur:
 		this.serveurSocket = new ServerSocket(port);
