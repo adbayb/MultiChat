@@ -20,4 +20,7 @@ public abstract class AbstractMultichatServer {
 		return autresClients;
 	}
 	
+	public Vector<Service> getService(){
+		return servicesCli;
+	}
 }

@@ -7,6 +7,8 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.Vector;
 
+import controller.Main.MyLogger;
+
 final class Service implements Runnable{
 	
 	private static int compteur = 1;
@@ -137,7 +139,7 @@ final class Service implements Runnable{
 			out.println("*** ATTENTION FERMETURE DU TCHAT ***");
 			deconnection();
 		} catch (IOException e) {
-			e.printStackTrace();
+			MyLogger.errorMessage(e.getMessage());
 		}
 	}
 	
@@ -147,7 +149,7 @@ final class Service implements Runnable{
 			out.println("*** DECONNECTION ***");
 			socket.close();
 		}catch(IOException e){
-			e.printStackTrace();
+			MyLogger.errorMessage(e.getMessage());
 		}
 	}
 	

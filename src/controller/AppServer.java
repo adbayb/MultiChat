@@ -2,27 +2,40 @@ package controller;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
+import controller.Main.MyLogger;
 import model.server.Server;
 import model.server.ServerNIO;
 
 public class AppServer {
 	private int port;
 	private Server serveur;
+	private InetAddress serverAddr;
 	
-	public AppServer(int port) {
+	public AppServer(int port, InetAddress serverAddr){
 		this.port = port;
 		this.serveur = null;
+		try {
+			if(serverAddr == null){
+				serverAddr = InetAddress.getLocalHost();
+			}
+			else{
+				this.serverAddr = serverAddr;
+			}
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			MyLogger.errorMessage(e.getMessage());
+		}
 	}
 	
 	public void execute() {
 		try {
-			InetAddress serverAddr = InetAddress.getLocalHost();
 			//Serveur configuré Sans NIO:
 			this.serveur = new Server(serverAddr, this.port);
 			serveur.start();
 		} catch (IOException e) {
-			System.err.println("Error Server Creation on Port [" + this.port + "] " +  e);			
+			MyLogger.errorMessage("Error Server Creation on Port [" + this.port + "] " +  e);
 		}
 		
 		return;
@@ -30,12 +43,11 @@ public class AppServer {
 	
 	public void executeNIO() {
 		try {
-			InetAddress serverAddr = InetAddress.getLocalHost();
 			//Serveur configuré Avec NIO:
 			ServerNIO serveurNIO = new ServerNIO(serverAddr, this.port);
 			serveurNIO.start();
 		} catch (IOException e) {
-			System.err.println("Error Server Creation on Port [" + this.port + "] " +  e);			
+			MyLogger.errorMessage("Error Server Creation on Port [" + this.port + "] " +  e);
 		}
 		
 		return;

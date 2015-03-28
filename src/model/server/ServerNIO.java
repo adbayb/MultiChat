@@ -8,6 +8,8 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.util.Iterator;
 
+import controller.Main.MyLogger;
+
 public class ServerNIO extends AbstractMultichatServer implements MultichatServer, Runnable {
 	private ServerSocketChannel serveurSocketChannel;
 	private Selector selector;
@@ -35,6 +37,7 @@ public class ServerNIO extends AbstractMultichatServer implements MultichatServe
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
+		System.out.println("Lancement du serveur NIO");
 		try {
 			//tant que le channel associé à notre serveur est actif, on peut communiquer:
 			while(this.serveurSocketChannel.isOpen()) {
@@ -79,7 +82,7 @@ public class ServerNIO extends AbstractMultichatServer implements MultichatServe
 			this.selector.close();
 			this.serveurSocketChannel.close();
 		} catch (IOException e) {
-			e.printStackTrace();
+			MyLogger.errorMessage(e.getMessage());
 		}
 	}
 }

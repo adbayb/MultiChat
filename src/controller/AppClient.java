@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
 
+import controller.Main.MyLogger;
 import model.client.Client;
 
 public class AppClient {
@@ -24,7 +25,7 @@ public class AppClient {
 			this.client = new Client(socket);
 			this.client.lancer();
 		} catch (IOException e) {
-				System.err.println("Error Connexion to Server [" + this.hostname + "] " +  e);			
+			MyLogger.errorMessage(("Error Connexion to Server [" + this.hostname + "] " +  e));			
 		}
 		
 		return;
