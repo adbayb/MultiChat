@@ -45,4 +45,12 @@ public class AppClient {
 	public void setPort(int port) {
 		this.port = port;
 	}
+
+	public Client getClient() {
+		return client;
+	}
+
+	public void setClient(Client client) {
+		this.client = client;
+	}
 }
