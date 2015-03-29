@@ -1,5 +1,6 @@
 package controller.client;
 
+import controller.MyLogger;
 import view.client.Gui;
 import javafx.application.Application;
 import javafx.scene.control.TextArea;
@@ -10,8 +11,10 @@ public class MainClient extends Application {
 	private static String HOST = "localhost"; 
 	private static boolean ISMULTICAST = false;
 	
-	@Override
-	public void start(Stage primaryStage) throws Exception {
+	/**
+	 * @brief Lancement dez l'application JavaFX
+	 */
+	public void start(Stage primaryStage){
 		// TODO Auto-generated method stub
 		//Partie client:
 		
@@ -23,7 +26,12 @@ public class MainClient extends Application {
 		appClient.execute();
 		if(windowChat != null) {
 			Gui gui = new Gui(appClient,windowChat);
-			gui.launch(primaryStage);
+			try {
+				gui.launch(primaryStage);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				MyLogger.errorMessage(e.getMessage());
+			}
 		}
 		//Nettoyage socket après fermeture du client:
 		primaryStage.setOnCloseRequest(new CloseClientListener(appClient,ISMULTICAST));

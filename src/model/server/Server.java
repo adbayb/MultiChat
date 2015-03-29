@@ -69,14 +69,14 @@ public class Server extends AbstractMultichatServer implements MultichatServer, 
 	}
 
 	/**
-	 * @brief Lance le thread du service qui va s'occuper d'un client
+	 * @brief Lance le thread du serveur
 	 */
 	public void start() {
 		(new Thread(this)).start();		
 	}
 	
 	/**
-	 * @brief Stoppe le service
+	 * @brief Stoppe le serveur et tous les services
 	 */
 	public void stop() {
 		try { 

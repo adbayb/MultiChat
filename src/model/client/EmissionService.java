@@ -15,7 +15,7 @@ public class EmissionService {
 	 * @param outSocketStream flux d'écrire connecté à la socket reliée au serveur
 	 * @throws IOException
 	 */
-	public EmissionService(OutputStream outSocketStream) throws IOException {
+	public EmissionService(OutputStream outSocketStream){
 		// Cree une socket pour communiquer avec le service se trouvant sur la
 		// machine host au port PORT
 		this.socketOut = new PrintWriter(outSocketStream, true);

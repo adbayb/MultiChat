@@ -17,8 +17,13 @@ public class ServerNIO extends AbstractMultichatServer implements MultichatServe
 	
 	//private InetSocketAddress serveurIPSocket;
 	
-	// Cree un serveur TCP - objet de la classe ServerSocket
-	// Puis lance le thread du serveur.
+	/**
+	 * @brief Cree un serveur TCP - objet de la classe ServerSocket
+	 * 	      Puis lance le thread du serveur.
+	 * @param address
+	 * @param port
+	 * @throws IOException
+	 */
 	public ServerNIO(InetAddress address, Integer port) throws IOException {
 		super(address,port);
 		
@@ -34,7 +39,9 @@ public class ServerNIO extends AbstractMultichatServer implements MultichatServe
 		this.serviceNIO = new ServiceNIO();
 	}
 
-	@Override
+	/**
+	 * @brief Le serveur ecoute et gere les connections.
+	 */
 	public void run() {
 		// TODO Auto-generated method stub
 		System.out.println("Lancement du serveur NIO");
@@ -69,13 +76,17 @@ public class ServerNIO extends AbstractMultichatServer implements MultichatServe
 		}
 	}
 
-	@Override
+	/**
+	 * @brief Lance le thread du serveur
+	 */
 	public void start() {
 		// TODO Auto-generated method stub
 		(new Thread(this)).start();	
 	}
 
-	@Override
+	/**
+	 * @brief Stoppe le serveur et tous les services
+	 */
 	public void stop() {
 		// TODO Auto-generated method stub
 		try { 

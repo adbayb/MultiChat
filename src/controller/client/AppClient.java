@@ -20,6 +20,13 @@ public class AppClient {
 	private boolean isMulticast;
 	private ClientMulticast clientMulticast;
 	
+	/**
+	 * @brief Gestion du client qui va être connecté à un serveur
+	 * @param hostname Addresse ip ou est connecté le serveur
+	 * @param port Port ou est conencté le serveur
+	 * @param windowChat Fenêtre JavaFX montrant l'ensemble des messages
+	 * @param isMulticast Booleen indiquant so on se trouve dans une conenxion multicast
+	 */
 	public AppClient(String hostname, int port, TextArea windowChat, boolean isMulticast) {
 		this.hostname = hostname;
 		this.port = port;
@@ -54,8 +61,13 @@ public class AppClient {
 		
 		return;
 	}
-	
-	//Gestion des input client (listener button):
+
+	/**
+	 * @brief Gestion des input client (listener button)
+	 * @param windowChat Fenêtre JavaFX montrant l'ensemble des messages
+	 * @param saisie Champ ou l'utilisateur a rentré son message
+	 * @return
+	 */
 	public InputClientListener getAddInputClient(TextArea windowChat, TextField saisie) {
 		if(this.isMulticast == false) 
 			return new InputClientListener(this.client, null, windowChat, saisie);

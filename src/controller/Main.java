@@ -18,7 +18,8 @@ public class Main {
 			"-m, -- multicast start the client en multicast mode\n"+
 			"-n, --nio configure the server in NIO mode\n"+
 			"-p, --port = PORT set the port\n"+
-			"-s, -- server start the server\n";	
+			"-s, -- server start the server\n"+
+			"-c, -- client launch the client interface\n";	
 	
 	public static void main(String[] args) {
 		boolean nio = false, server=false, client = false, multicast = false;
@@ -45,9 +46,11 @@ public class Main {
 				}
 				System.exit(0);
 			case 'm':
+				//mode multicast
 				multicast = true;
 				break;
 			case 'n':
+				//mode client
 				nio = true;
 				break;
 			case 'p':
@@ -76,7 +79,6 @@ public class Main {
 		}
 	
 		if(client){
-			//new AppClient(HOST,PORT).execute();
 			if(multicast) {
 				MainClient.setISMULTICAST(true);
 			}
@@ -100,9 +102,5 @@ public class Main {
 				MainServer.mainNIO();		
 			}
 		}
-		/*MainClient.setISMULTICAST(true);
-		MainClient.setHOST(HOST);
-		MainClient.setPORT(PORT);
-		Application.launch(MainClient.class,args);*/
     }
 }

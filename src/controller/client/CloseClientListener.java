@@ -1,8 +1,5 @@
 package controller.client;
 
-import java.io.IOException;
-
-import controller.MyLogger;
 import javafx.event.EventHandler;
 import javafx.stage.WindowEvent;
 
@@ -10,11 +7,19 @@ public class CloseClientListener implements EventHandler<WindowEvent> {
 	private AppClient appClient;
 	private boolean isMulticast;
 	
+	/**
+	 * @brief Gestion de la fermeture d'un client
+	 * @param appClient Programme ou le client tourne
+	 * @param isMulticast booleen indiquant si c'est une connexion multicast
+	 */
 	public CloseClientListener(AppClient appClient, boolean isMulticast) {
 		this.appClient = appClient;
 		this.isMulticast = isMulticast;
 	}
 	
+	/**
+	 * @brief Gestion de l'événement
+	 */
 	public void handle(WindowEvent event) {
 		// TODO Auto-generated method stub
 		System.out.println("Client Closed");
@@ -26,25 +31,10 @@ public class CloseClientListener implements EventHandler<WindowEvent> {
 							this.appClient.getClient().getSocket().getInetAddress()+" "+
 							this.appClient.getClient().getSocket().getPort()+"]"
 							);
-			//On nettoie notre socket client et on le ferme:
-			try {
-				this.appClient.getClient().stop();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				MyLogger.errorMessage(("Client disconnected"));
-				//On quitte en cas d'exception (MyLogger ne quitte pas le programme directement après avoir loggué):
-				System.exit(0);
-			}
+			this.appClient.getClient().stop();
 		}
 		else {
-			try {
-				this.appClient.getClientMulticast().stop();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				MyLogger.errorMessage(("Client disconnected"));
-				//On quitte en cas d'exception (MyLogger ne quitte pas le programme directement après avoir loggué):
-				System.exit(0);
-			}
+			this.appClient.getClientMulticast().stop();
 		}
 	}
 

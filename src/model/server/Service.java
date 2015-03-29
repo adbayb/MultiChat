@@ -20,6 +20,10 @@ final class Service implements Runnable{
 	
 	private final Object lock = new Object();
 
+	/**
+	 * @brief Service qui va s'occuper s'un client
+	 * @param socket Socket qui va être relié au client
+	 */
 	public Service(Socket socket){
 		this.numero = compteur++;
 		this.socket = socket;
@@ -28,6 +32,11 @@ final class Service implements Runnable{
 		(new Thread(this)).start();
 	}
 	
+	/**
+	 * @brief Initialisation du service avec une liste représentant les autres socket
+	 * @param affichage socket relié au client de se service
+	 * @param autresClients autres socket qui sont chacunes reliées à un client
+	 */
 	public Service(Socket affichage, Vector<Socket> autresClients) {
 		this.numero = compteur++;
 		this.socket = affichage;
@@ -41,12 +50,14 @@ final class Service implements Runnable{
 		(new Thread(this)).start();
 	}	
 
-	@Override
+	/**
+	 * @brief gestion de l'envoi et la réception des messages clients
+	 */
 	public void run() {
 		System.out.println("Nouveau client : " + this.socket.getInetAddress());
 		try {BufferedReader in = new BufferedReader (new InputStreamReader(socket.getInputStream ( )));
 		PrintWriter out = new PrintWriter (socket.getOutputStream (), true);
-		out.println("Welcome to ADIB and SARR Tchat !!! (" + socket.getInetAddress() + " port : " + socket.getLocalPort() + ")");
+		out.println("Welcome to ADIB and SARR Tchat !!! [version 1.0] (" + socket.getInetAddress() + " port : " + socket.getLocalPort() + ")");
 		out.flush();
 		
 		while (connected) {
@@ -76,6 +87,11 @@ final class Service implements Runnable{
 		deconnection();
 	}
 	
+	/**
+	 * @brief broadcast du message du client
+	 * @param line
+	 * @param out
+	 */
 	public void diffusionMessage(String line, PrintWriter out){		
 		System.out.println("Service " + numero + " a recu : " + line);
 		boolean socketFermee = false;	//variable permettant de signaler si on peut ecrire sur une socket

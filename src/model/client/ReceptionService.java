@@ -21,7 +21,7 @@ public class ReceptionService implements  Runnable {
 	 * @param windowChat Fenêtre JavaFX qui va permettre d'afficher le chat 
 	 * @throws IOException
 	 */
-	public ReceptionService(InputStream socketInputStream, TextArea windowChat) throws IOException {
+	public ReceptionService(InputStream socketInputStream, TextArea windowChat){
 		this.socketIn = new BufferedReader(new InputStreamReader(socketInputStream));
 		this.windowChat = windowChat;
 		this.lectureThread = new Thread(this);

@@ -8,11 +8,21 @@ import java.util.Vector;
 public abstract class AbstractMultichatServer {
 	private Vector<Service> servicesCli;
 	
-	AbstractMultichatServer(InetAddress address, Integer port) throws IOException {
+	/**
+	 * @brief Classe abstraite représentant les principales données du serveur : l'addressse IP et le port
+	 * @param address
+	 * @param port
+	 * @throws IOException
+	 */
+	AbstractMultichatServer(InetAddress address, Integer port){
 		this.servicesCli = new Vector<Service>();
 		System.out.println("Server Initialized ["+address+":"+port+"]");
 	}
-	
+
+	/**
+	 * @brief Retourne tous les autres clients  connectés sur le chat
+	 * @return la liste des autres socket connectées
+	 */
 	public Vector<Socket> getAutresClients() {
 		Vector<Socket> autresClients = new Vector<Socket>();
 		//todo: A modifier avec itérateur for( : ) :

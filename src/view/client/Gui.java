@@ -31,13 +31,22 @@ public class Gui {
 	private TextField saisie;
 	private TextArea windowChat;
 
+	/**
+	 * @brief On rattache notre vue à notre controlleur client
+	 * @param client
+	 * @param windowChat
+	 */
 	public Gui(AppClient client, TextArea windowChat) {
-		//On rattache notre vue à notre controlleur client:
 		this.client = client;
 		this.saisie = new TextField();
 		this.windowChat = windowChat;
 	}
 	
+	/**
+	 * @brief Lancement de la fenêtre JavaFX
+	 * @param fenetre
+	 * @throws Exception
+	 */
 	public void launch(Stage fenetre) throws Exception {
 		StackPane root = new StackPane();
 		

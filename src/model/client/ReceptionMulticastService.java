@@ -12,21 +12,35 @@ public class ReceptionMulticastService implements  Runnable {
 	private TextArea windowChat;
 	private Thread lectureThread;
 	
-	public ReceptionMulticastService(MulticastSocket multicastSocket, TextArea windowChat) throws IOException {
+	/**
+	 * 
+	 * @brief Cree un flux permetttant de lire les messages envoyés par les autres clients
+	 * @param MulticastSocket Socket ou va se connecter le flux
+	 * @param windowChat Fenêtre JavaFX qui va permettre d'afficher le chat 
+	 * @throws IOException
+	 */
+	public ReceptionMulticastService(MulticastSocket multicastSocket, TextArea windowChat){
 		// Cree une socket pour communiquer avec le service se trouvant sur la
 		// machine host au port PORT
 		this.multicastSocket = multicastSocket;
 		this.windowChat = windowChat;
 		this.lectureThread = new Thread(this);
 	}
-	
+
+	/**
+	 * @brief Lancement du thread qui va "écouter" sur la socket
+	 */
 	public void lancer() {
 		if(this.lectureThread != null)
 			this.lectureThread.start();
 		
 		return;
 	}
-	
+
+	/**
+	 * @brief Arrêt du thread
+	 * @throws IOException
+	 */
 	public void stop() throws IOException {
 		if(this.lectureThread != null) {
 			this.lectureThread.interrupt();
@@ -36,7 +50,13 @@ public class ReceptionMulticastService implements  Runnable {
 		
 		return;
 	}
+
 	
+	/**
+	 * @brief le thread va écouter les messages envoyés du serveur
+	 * 		  Lors de la reception d'un message, celui-ci est affiché sur 
+	 * 		  la fenêtre JavaFX
+	 */
 	public void run() {
 		byte[] dataIn = new byte[1024];
 		DatagramPacket paquetIn = new DatagramPacket(dataIn, 0, dataIn.length);

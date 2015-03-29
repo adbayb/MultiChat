@@ -14,7 +14,14 @@ public class EmissionMulticastService {
 	private TextField saisie;
 	private String nickname;
 	
-	public EmissionMulticastService(MulticastSocket multicastSocket, InetAddress address, int port) throws IOException {
+	/**
+	 * @brief Classe permettant d'envoyer des messages à travers la socket
+	 * @param multicastSocket Socket permettant de communiquer dans le cas d'une communication multicast
+	 * @param address Addresse Ip ou le client va se connecter
+	 * @param port
+	 * @throws IOException
+	 */
+	public EmissionMulticastService(MulticastSocket multicastSocket, InetAddress address, int port){
 		//On ne binde pas car seulement envoie de donnée en UDP:
 		this.multicastSocket = multicastSocket;
 		this.address = address;
@@ -24,6 +31,11 @@ public class EmissionMulticastService {
 		this.saisie = null;
 	}
 	
+	/**
+	 * @brief Envoi du texte saisi par l'utilisateur
+	 * @param saisie Texte saisie dans la fenêtre JavaFX
+	 * @return true si l'envoi si bien passé, false si il y a un probleme de connexion
+	 */
 	public boolean updateSaisie(TextField saisie) {
 		byte[] dataOut = new byte[1024];
 		DatagramPacket paquetOut;

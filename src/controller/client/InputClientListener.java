@@ -13,7 +13,13 @@ public class InputClientListener implements EventHandler<ActionEvent> {
 	private Client client;
 	private ClientMulticast clientMulticast;
 
-	
+	/**
+	 * @brief Classe qui va permettre de detecter l'envoi d'un message par le client
+	 * @param client Client connecté à la socket
+	 * @param clientMulticast Client dans le cas d'une connection multicast
+	 * @param windowChat Fenêtre Affichant l'ensemble des messages du chat
+	 * @param saisie champ ou l'utilisateur a saisi son message
+	 */
 	public InputClientListener(Client client, ClientMulticast clientMulticast, TextArea windowChat, TextField saisie) {
 		this.client = client;
 		this.clientMulticast = clientMulticast;
@@ -21,6 +27,9 @@ public class InputClientListener implements EventHandler<ActionEvent> {
 		this.windowChat = windowChat;
 	}
 	
+	/**
+	 * @brief Gestion de l'évenement : Affichage du message et envoi à la socket (pour le broadcast)
+	 */
 	public void handle(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		if(this.saisie.getText() != null) {
