@@ -3,10 +3,9 @@ package model.client;
 import java.io.IOException;
 import java.net.Socket;
 
-import javafx.concurrent.Task;
 import javafx.scene.control.TextArea;
 
-public class Client {
+public class Client implements Runnable {
 	//Un client est définit par les services de lecture et Ecriture 
 	private ReceptionService lecture;
 	private EmissionService ecriture;
@@ -23,21 +22,8 @@ public class Client {
 		ecriture = new EmissionService(this.socket.getOutputStream());		
 	}
 	
-	public void launch() {
-		//l'écriture sera reçu via un listener (cf AddInputClient.java):
-		Task<Void> task = new Task<Void>() {
-            @Override
-            protected Void call() throws Exception {
-            	lecture.lancer();
-                return null;
-            }
-        };
-
-        new Thread(task).start();		
-	}
-	
 	public void stop() throws IOException {
-		this.lecture.stop();
+		//this.lecture.stop();
 		this.socket.shutdownOutput();
 		this.socket.shutdownInput();
 		this.socket.close();
@@ -73,6 +59,13 @@ public class Client {
 
 	public void setSocket(Socket socket) {
 		this.socket = socket;
+	}
+
+	@Override
+	public void run() {
+		// TODO Auto-generated method stub
+		//l'écriture sera reçu via un listener (cf AddInputClient.java):
+		new Thread(this.lecture).start();
 	}
 	
 }

@@ -35,7 +35,7 @@ public class AppClient {
 	}
 	
 	public void execute() {
-		this.client.launch();
+		new Thread(this.client).start();
 		
 		return;
 	}
