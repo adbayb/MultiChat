@@ -73,7 +73,6 @@ final class Service implements Runnable{
 						messageConnection = false;				
 					}*/
 					if(line.toLowerCase().contains("/nick ") == true) {
-						System.out.println("truuuuue\n");
 						String nickname = line.replaceAll("(.*)/nick (.*)(\n)","$2");
 						this.nickname = nickname;
 						System.out.println("Added Nickname: "+nickname);
