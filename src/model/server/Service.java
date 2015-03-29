@@ -15,7 +15,8 @@ final class Service implements Runnable{
 	private int numero;
 	private Socket socket;
 	private Vector<Socket> autresClients;
-	String nickname = null;
+	private String nickname = null;
+	private boolean connected;
 	
 	private final Object lock = new Object();
 
@@ -23,7 +24,7 @@ final class Service implements Runnable{
 		this.numero = compteur++;
 		this.socket = socket;
 		autresClients = new Vector<Socket>();
-		
+		connected = true;
 		(new Thread(this)).start();
 	}
 	
@@ -31,6 +32,7 @@ final class Service implements Runnable{
 		this.numero = compteur++;
 		this.socket = affichage;
 		this.autresClients = new Vector<Socket>();
+		connected = true;
 		for(int i = 0; i < autresClients.size(); i++){
 			if(autresClients.get(i).getInetAddress() != affichage.getInetAddress())
 				this.autresClients.add(autresClients.get(i));
@@ -41,64 +43,68 @@ final class Service implements Runnable{
 
 	@Override
 	public void run() {
-		System.out.print("Nouveau client : " + this.socket.getInetAddress());
+		System.out.println("Nouveau client : " + this.socket.getInetAddress());
 		try {BufferedReader in = new BufferedReader (new InputStreamReader(socket.getInputStream ( )));
 		PrintWriter out = new PrintWriter (socket.getOutputStream (), true);
 		out.println("Welcome to the chat !!! (" + socket.getInetAddress() + " port : " + socket.getLocalPort() + ")");
 		
 		boolean messageConnection = true;
-		while (true) {
+		while (connected) {
 			// lit la ligne
 			String line = in.readLine();
-			synchronized(lock){
-				//on recupere le contenu du message (sans le login et les chevrons) pour le traitement
-				String contenu = line.substring(line.lastIndexOf(">") + 2);
-				if(contenu.length() > 5){
-					System.out.println(contenu.substring(0,4));
-					if(contenu.substring(0,4).equals("nick")){
-						String nickName = contenu.substring(5,contenu.length());
-						this.nickname = nickName;
-						out.println("Nickname created : " + nickName);
-					}	
-					else{								
-						diffusionMessage(line, out, messageConnection);
-						messageConnection = false;
+			if(line != null){
+				synchronized(lock){
+					//on recupere le contenu du message (sans le login et les chevrons) pour le traitement
+					/*String contenu = line.substring(line.lastIndexOf(">") + 2);
+					if(contenu.length() > 5){
+						System.out.println(contenu.substring(0,4));
+						if(contenu.substring(0,4).equals("nick")){
+							String nickName = contenu.substring(5,contenu.length());
+							this.nickname = nickName;
+							out.println("Nickname created : " + nickName);
+						}	
+						else{								
+							diffusionMessage(line, out, messageConnection);
+							messageConnection = false;
+						}
 					}
-				}
-				else{
-					diffusionMessage(line, out, messageConnection);
-					messageConnection = false;				
+					else{
+						diffusionMessage(line, out, messageConnection);
+						messageConnection = false;				
+					}*/
+					if(line.toLowerCase().contains("/nick ") == true) {
+						System.out.println("truuuuue\n");
+						String nickname = line.replaceAll("(.*)/nick (.*)(\n)","$2");
+						this.nickname = nickname;
+						System.out.println("Added Nickname: "+nickname);
+					}
+					else{
+						diffusionMessage(line, out, messageConnection);
+					}
 				}				
+			}
+			else{
+				deconnection();
 			}
 		}
 	}
 	catch (IOException e) {
-		System.err.println("Fin du service " + this.numero + " : " + e);
+		System.err.println("Fin du service " + this.numero + " : " + e);			
+		deconnection();
 	}
 		deconnection();
 	}
 	
-	public void diffusionMessage(String line, PrintWriter out, boolean messageConnection){
-		System.out.println("Service " + numero + " a recu " + line);
+	public void diffusionMessage(String line, PrintWriter out, boolean messageConnection){		
+		System.out.println("Service " + numero + " a recu : " + line);
 		boolean socketFermee = false;	//variable permettant de signaler si on peut ecrire sur une socket
-		if (!messageConnection){
-			if(this.nickname == null){
-				out.println(line);
-			}
-			else{
-				String name = line.substring(0, line.lastIndexOf(">") - 1);
-				line = this.nickname + ">>" + line.substring(line.lastIndexOf(">") + 2);
-				//line.replace(name, this.nickname);
-				out.println(line);
-			}
-		}
 		for (int i = 0; i < autresClients.size(); i++){
 			socketFermee = false;
 			try{
 				out = new PrintWriter (autresClients.get(i).getOutputStream (), true);
 			}catch(IOException e){
 				/**
-				 * Si une exception est lev�e sur cette socket, cela veut dire que le client
+				 * Si une exception est lev?e sur cette socket, cela veut dire que le client
 				 * précedement connecté à cette socket s'est deconnecté
 				 */
 				socketFermee = true;
@@ -106,16 +112,17 @@ final class Service implements Runnable{
 				autresClients.removeElementAt(i);
 				--i;	//on decremente i car tout les elements du vector reculent de 1
 			}
-			if (!socketFermee){
+			if (!socketFermee){				
+				String msg = "";
 				if(this.nickname == null){
-					out.println(line);
+					msg += "Guest" + autresClients.get(i).getInetAddress() 
+					+ "-" + autresClients.get(i).getPort() + " said : " + line;
 				}
 				else{
-					String name = line.substring(0, line.lastIndexOf(">") - 1);
-					line = this.nickname + ">>" + line.substring(line.lastIndexOf(">") + 2);
-					//line.replace(name, this.nickname);					
-					out.println(line);
+					msg = this.nickname + " said : " + line;					
 				}
+				out.println(msg);
+				out.flush();
 			}
 		}	
 		
@@ -137,16 +144,19 @@ final class Service implements Runnable{
 		try {
 			PrintWriter out = new PrintWriter (socket.getOutputStream (), true);
 			out.println("*** ATTENTION FERMETURE DU TCHAT ***");
+			out.flush();
 			deconnection();
 		} catch (IOException e) {
 			MyLogger.errorMessage(e.getMessage());
 		}
 	}
 	
-	public void deconnection(){
+	public void deconnection(){		
 		try{
+			connected = false;
 			PrintWriter out = new PrintWriter (socket.getOutputStream (), true);
 			out.println("*** DECONNECTION ***");
+			out.flush();
 			socket.close();
 		}catch(IOException e){
 			MyLogger.errorMessage(e.getMessage());
