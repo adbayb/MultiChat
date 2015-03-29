@@ -3,9 +3,7 @@ package com.adibsarr.multichat.model.client;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-import java.net.UnknownHostException;
 
-import com.adibsarr.multichat.controller.MyLogger;
 
 import javafx.scene.control.TextArea;
 

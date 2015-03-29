@@ -1,9 +1,9 @@
-package model.client;
+package com.adibsarr.multichat.model.client;
 
 import java.io.IOException;
 import java.net.Socket;
 
-import controller.MyLogger;
+import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 
 public class Client {
@@ -18,21 +18,17 @@ public class Client {
 	 * 		  et associé à une fenêtre JavaFX
 	 * @param socket Socket connectée au client
 	 * @param windowChat Fenêtre JavaFX représentant le chat
+	 * @param listUserOnline Buddy List Vue
 	 * @throws IOException
 	 */
-	public Client(Socket socket, TextArea windowChat){
+	public Client(Socket socket, TextArea windowChat, ListView<String> listUserOnline) throws IOException {
 		//Un client est également définit par une fenêtre de données contenant l'ensemble des Output/Input: textarea
 		this.socket = socket;
 		//Lecture implémente Runnable car la lecture est bloquante:
 		//socket permettant la lecture des messages venant du serveur dédié:
-		try {
-			lecture = new ReceptionService(this.socket.getInputStream(),windowChat);
-			//socket Client permettant l'envoi de messages au serveur dédié
-			ecriture = new EmissionService(this.socket.getOutputStream());	
-		} catch (IOException e) {
-			MyLogger.errorMessage(e.getMessage());
-		}
-	
+		lecture = new ReceptionService(this.socket.getInputStream(),windowChat, listUserOnline);
+		//socket Client permettant l'envoi de messages au serveur dédié
+		ecriture = new EmissionService(this.socket.getOutputStream());		
 	}
 	
 	/**
