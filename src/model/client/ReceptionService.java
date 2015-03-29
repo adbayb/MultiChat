@@ -54,26 +54,25 @@ public class ReceptionService implements  Runnable {
 			//Platform.runLater permet donc d'ajouter les modifications graphique depuis un autre thread dans le thread JAVAFX Application
 			//de manière thread safe:
 			Platform.runLater(
-					new Runnable(){
+				new Runnable(){
 
-						@Override
-						public void run() {
-							if (receivedLine == null) { 
-								windowChat.appendText("Connection closed by Server. Bye\n");
-								try {
-									stop();
-								} catch (IOException e) {
-									// TODO Auto-generated catch block
-									e.printStackTrace();
-								}								
-									Platform.exit();
-									
-							}
-							windowChat.appendText(receivedLine+"\n");
+					@Override
+					public void run() {
+						if (receivedLine == null) { 
+							windowChat.appendText("Connection closed by Server. Bye\n");								
+								
 						}
-						
+						windowChat.appendText(receivedLine+"\n");
 					}
-				);
+					
+				}
+			);
+			try {
+				stop();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 	}
 
