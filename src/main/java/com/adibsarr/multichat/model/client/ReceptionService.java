@@ -94,14 +94,12 @@ public class ReceptionService implements  Runnable {
 					else {
 						if(receivedLine.contains("/buddyList ") == false) {
 							windowChat.appendText(receivedLine+"\n");
-							receivedLine = null;
 						}
 						else {//BuddyList
 							ObservableList<String> bufferUserOnline = FXCollections.observableArrayList();
 							listUserOnline.setItems(null);
 							bufferUserOnline.clear();
 							String[] splitUserOnline = (receivedLine.substring("/buddyList ".length(), receivedLine.length()-1)).split(",");
-							receivedLine = null;
 							for(String userOnline : splitUserOnline) {
 								bufferUserOnline.add(userOnline);
 							}

@@ -94,7 +94,7 @@ public class ServiceNIO {
 						//Broadcast du message à tous les channels rattachés aux divers sockets clients connectés:
 						socketChannel.write(msgBuffer);
 						//Nettoyage du buffer:
-						msgBuffer.flip();
+						msgBuffer.clear();
 					}
 				}
 			}
@@ -109,7 +109,7 @@ public class ServiceNIO {
 				if(socketChannel != null) {
 					buddyBuffer = ByteBuffer.wrap(this.getBuddyList().getBytes());
 					socketChannel.write(buddyBuffer);
-					buddyBuffer.flip();
+					buddyBuffer.clear();
 				}
 			}
 		}

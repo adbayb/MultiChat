@@ -56,7 +56,7 @@ public class ServerNIO extends AbstractMultichatServer implements MultichatServe
 						//Appel à la fonction acceptation des connexions clients (qui créera les channels au sockets entrants et leur associera le statut "en lecture" (Readable)):
 						if(sKey.isAcceptable()) {
 							this.serviceNIO.serviceAccept(this.selector, sKey);
-							System.out.println(this.serviceNIO.diffusionBuddyList(this.selector));
+							//this.serviceNIO.diffusionBuddyList(this.selector);
 						}
 						if(sKey.isReadable()) {
 							this.serviceNIO.serviceLecture(this.selector, sKey);
