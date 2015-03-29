@@ -3,9 +3,10 @@ package com.adibsarr.multichat.model.client;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.MulticastSocket;
-
-
+import java.net.UnknownHostException;
 import javafx.scene.control.TextArea;
+
+import com.adibsarr.multichat.controller.MyLogger;
 
 public class ClientMulticast {
 	//Un client est définit par les services de lecture et Ecriture 
