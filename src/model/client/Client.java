@@ -3,6 +3,7 @@ package model.client;
 import java.io.IOException;
 import java.net.Socket;
 
+import javafx.concurrent.Task;
 import javafx.scene.control.TextArea;
 
 public class Client {
@@ -24,7 +25,15 @@ public class Client {
 	
 	public void launch() {
 		//l'écriture sera reçu via un listener (cf AddInputClient.java):
-		lecture.lancer();			
+		Task<Void> task = new Task<Void>() {
+            @Override
+            protected Void call() throws Exception {
+            	lecture.lancer();
+                return null;
+            }
+        };
+
+        new Thread(task).start();		
 	}
 	
 	public void stop() throws IOException {
