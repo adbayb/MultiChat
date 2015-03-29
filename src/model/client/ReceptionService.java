@@ -67,12 +67,6 @@ public class ReceptionService implements  Runnable {
 					
 				}
 			);
-			try {
-				stop();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 		}
 	}
 
