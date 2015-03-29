@@ -5,7 +5,7 @@ import java.net.Socket;
 
 import javafx.scene.control.TextArea;
 
-public class Client implements Runnable {
+public class Client {
 	//Un client est définit par les services de lecture et Ecriture 
 	private ReceptionService lecture;
 	private EmissionService ecriture;
@@ -22,8 +22,13 @@ public class Client implements Runnable {
 		ecriture = new EmissionService(this.socket.getOutputStream());		
 	}
 	
+	public void launch() {
+		//l'écriture sera reçu via un listener (cf AddInputClient.java):
+		lecture.lancer();			
+	}
+	
 	public void stop() throws IOException {
-		//this.lecture.stop();
+		this.lecture.stop();
 		this.socket.shutdownOutput();
 		this.socket.shutdownInput();
 		this.socket.close();
@@ -59,13 +64,6 @@ public class Client implements Runnable {
 
 	public void setSocket(Socket socket) {
 		this.socket = socket;
-	}
-
-	@Override
-	public void run() {
-		// TODO Auto-generated method stub
-		//l'écriture sera reçu via un listener (cf AddInputClient.java):
-		new Thread(this.lecture).start();
 	}
 	
 }

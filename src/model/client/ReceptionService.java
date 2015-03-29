@@ -5,11 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import javafx.concurrent.Task;
 import javafx.scene.control.TextArea;
 
 //Runnable car la lecture est bloquante donc on le lance dans un thread à part pour ne pas bloquer notre GUI et autres:
-public class ReceptionService extends Task<Void> {
+public class ReceptionService implements  Runnable {
 	private BufferedReader socketIn;
 	private TextArea windowChat;
 	private Thread lectureThread;
@@ -20,6 +19,43 @@ public class ReceptionService extends Task<Void> {
 		this.socketIn = new BufferedReader(new InputStreamReader(socketInputStream));
 		this.windowChat = windowChat;
 		this.lectureThread = new Thread(this);
+	}
+	
+	public void lancer() {
+		if(this.lectureThread != null)
+			this.lectureThread.start();
+		
+		return;
+	}
+	
+	public void stop() throws IOException {
+		if(this.lectureThread != null) {
+			this.lectureThread.interrupt();
+		}
+		
+		return;
+	}
+	
+	public void run() {
+		String line = null;
+		//Tant que notre thread n'est pas interrompu (stop est dépréciée), on continue à lire:
+		while(!this.lectureThread.isInterrupted()) {
+			try {
+				line = this.socketIn.readLine();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+			}
+			//Verifie si la connection est fermee. Si oui on sort de la boucle:
+			//Ajout du service Platform.runLater car modification d'un élément GUI JavaFX or de son thread application:
+			//Platform.runLater permet donc d'ajouter les modifications graphique depuis un autre thread dans le thread JAVAFX Application
+			//de manière thread safe:
+			if (line == null) { 
+				this.windowChat.appendText("Connection closed by Server. Bye\n");
+				break;
+			}
+			this.windowChat.appendText(line+"\n");
+		}
 	}
 
 	public BufferedReader getSocketIn() {
@@ -36,28 +72,6 @@ public class ReceptionService extends Task<Void> {
 
 	public void setWindowChat(TextArea windowChat) {
 		this.windowChat = windowChat;
-	}
-
-	@Override
-	protected Void call() throws Exception {
-		// TODO Auto-generated method stub
-		String line = null;
-		//Tant que notre thread n'est pas interrompu (stop est dépréciée), on continue à lire:
-		while(true) {
-			try {
-				line = this.socketIn.readLine();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				//e.printStackTrace();
-			}
-			//Verifie si la connection est fermee. Si oui on sort de la boucle:
-			if (line == null) { 
-				this.windowChat.appendText("Connection closed by Server. Bye\n");
-				break;
-			}
-			this.windowChat.appendText(line+"\n");
-		}
-		return null;
 	}
 
 }
