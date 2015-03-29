@@ -9,11 +9,11 @@ public class Client {
 	//Un client est définit par les services de lecture et Ecriture 
 	private ReceptionService lecture;
 	private EmissionService ecriture;
-	//Un client est également définit par une fenêtre de données contenant l'ensemble des Output/Input:
-	private TextArea windowChat;
+	
 	private Socket socket;
 	
 	public Client(Socket socket, TextArea windowChat) throws IOException {
+		//Un client est également définit par une fenêtre de données contenant l'ensemble des Output/Input: textarea
 		this.socket = socket;
 		//Lecture implémente Runnable car la lecture est bloquante:
 		//socket permettant la lecture des messages venant du serveur dédié:
@@ -29,9 +29,12 @@ public class Client {
 	
 	public void stop() throws IOException {
 		this.lecture.stop();
-		this.socket.shutdownOutput();
+		//Inutile car l'input associé au socket est déjà fermé par le thread: 
+		//le socket est alors automatiquement fermé lorsqu'un de ces flux est fermé:
+		/*this.socket.shutdownOutput();
 		this.socket.shutdownInput();
-		this.socket.close();
+		this.socket.close();*/
+		System.exit(0);
 	}
 
 	public ReceptionService getLecture() {
@@ -50,14 +53,6 @@ public class Client {
 		this.ecriture = ecriture;
 	}
 
-	public TextArea getWindowChat() {
-		return windowChat;
-	}
-
-	public void setWindowChat(TextArea windowChat) {
-		this.windowChat = windowChat;
-	}
-
 	public Socket getSocket() {
 		return socket;
 	}
@@ -65,5 +60,4 @@ public class Client {
 	public void setSocket(Socket socket) {
 		this.socket = socket;
 	}
-	
 }

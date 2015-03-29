@@ -10,6 +10,11 @@ public class EmissionService {
 	PrintWriter socketOut;
 	private TextField saisie;
 	
+	/**
+	 * @brief Créé un flux permettant d'écrire sur la socket connectée au serveur
+	 * @param outSocketStream flux d'écrire connecté à la socket reliée au serveur
+	 * @throws IOException
+	 */
 	public EmissionService(OutputStream outSocketStream) throws IOException {
 		// Cree une socket pour communiquer avec le service se trouvant sur la
 		// machine host au port PORT
@@ -17,6 +22,11 @@ public class EmissionService {
 		this.saisie = null;
 	}
 	
+	/**
+	 * @brief Envoi d'un message saisi à la socket
+	 * @param saisie message sasi sur la fenêtre JavaFX
+	 * @return true si la socket est encore connectée, false sinon
+	 */
 	public boolean updateSaisie(TextField saisie) {
 		if(saisie != null) {
 			this.saisie = saisie;

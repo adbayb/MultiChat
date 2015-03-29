@@ -8,6 +8,7 @@ import javafx.stage.Stage;
 public class MainClient extends Application {
 	private static int PORT = 10000;
 	private static String HOST = "localhost"; 
+	private static boolean ISMULTICAST = false;
 	
 	@Override
 	public void start(Stage primaryStage) throws Exception {
@@ -17,17 +18,15 @@ public class MainClient extends Application {
 		TextArea windowChat = new TextArea();
 		//Read Only pour notre textarea:
 		windowChat.setEditable(false);
-		AppClient appClient = new AppClient(HOST,PORT,windowChat);
-		//Si le client a été effectivement crée et connecté au serveur:
-		if(appClient.getClient() != null) {
-			appClient.execute();
-			if(windowChat != null) {
-				Gui gui = new Gui(appClient,windowChat);
-				gui.launch(primaryStage);
-			}
+		AppClient appClient = new AppClient(HOST,PORT,windowChat,ISMULTICAST);
+		//Exécution du client:
+		appClient.execute();
+		if(windowChat != null) {
+			Gui gui = new Gui(appClient,windowChat);
+			gui.launch(primaryStage);
 		}
 		//Nettoyage socket après fermeture du client:
-		primaryStage.setOnCloseRequest(new CloseClientListener(appClient));
+		primaryStage.setOnCloseRequest(new CloseClientListener(appClient,ISMULTICAST));
 	}
 
 	public static int getPORT() {
@@ -44,6 +43,14 @@ public class MainClient extends Application {
 
 	public static void setHOST(String hOST) {
 		HOST = hOST;
+	}
+
+	public static boolean isISMULTICAST() {
+		return ISMULTICAST;
+	}
+
+	public static void setISMULTICAST(boolean iSMULTICAST) {
+		ISMULTICAST = iSMULTICAST;
 	}
 
 }

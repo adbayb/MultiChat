@@ -9,6 +9,9 @@ public class MainServer {
 	private static int PORT = 10000;
 	private static String HOST = "localhost";
 	
+	/**
+	 * @brief Appel au lancement du serveur classique
+	 */
 	public static void main() {
 		try {
 			new AppServer(InetAddress.getByName(HOST),PORT).execute();
@@ -17,7 +20,10 @@ public class MainServer {
 			MyLogger.errorMessage(e.getMessage());
 		}
 	}
-	
+
+	/**
+	 * @brief Appel au lancement du serveur NIO
+	 */
 	public static void mainNIO() {
 		try {
 			new AppServer(InetAddress.getByName(HOST),PORT).executeNIO();

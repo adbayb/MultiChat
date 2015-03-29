@@ -15,15 +15,22 @@ public class ReceptionService implements  Runnable {
 	private Thread lectureThread;
 	private String receivedLine;
 	
+	/**
+	 * @brief Cree un flux permetttant de lire les messages venant du serveur se trouvant sur la machine host au port PORT
+	 * @param socketInputStream Socket ou va se connecter le flux
+	 * @param windowChat Fenêtre JavaFX qui va permettre d'afficher le chat 
+	 * @throws IOException
+	 */
 	public ReceptionService(InputStream socketInputStream, TextArea windowChat) throws IOException {
-		// Cree une socket pour communiquer avec le service se trouvant sur la
-		// machine host au port PORT
 		this.socketIn = new BufferedReader(new InputStreamReader(socketInputStream));
 		this.windowChat = windowChat;
 		this.lectureThread = new Thread(this);
 		receivedLine = null;
 	}
 	
+	/**
+	 * @brief Lancement du thread qui va "écouter" sur la socket
+	 */
 	public void lancer() {
 		if(this.lectureThread != null)
 			this.lectureThread.start();
@@ -31,6 +38,10 @@ public class ReceptionService implements  Runnable {
 		return;
 	}
 	
+	/**
+	 * @brief Arrêt du thread
+	 * @throws IOException
+	 */
 	public void stop() throws IOException {
 		if(this.lectureThread != null) {
 			this.lectureThread.interrupt();
@@ -39,6 +50,11 @@ public class ReceptionService implements  Runnable {
 		return;
 	}
 	
+	/**
+	 * @brief le thread va écouter les messages envoyés du serveur
+	 * 		  Lors de la reception d'un message, celui-ci est affiché sur 
+	 * 		  la fenêtre JavaFX
+	 */
 	public void run() {
 		receivedLine = null;
 		//Tant que notre thread n'est pas interrompu (stop est dépréciée), on continue à lire:
@@ -53,20 +69,27 @@ public class ReceptionService implements  Runnable {
 			//Ajout du service Platform.runLater car modification d'un élément GUI JavaFX or de son thread application:
 			//Platform.runLater permet donc d'ajouter les modifications graphique depuis un autre thread dans le thread JAVAFX Application
 			//de manière thread safe:
-			Platform.runLater(
-				new Runnable(){
+			Platform.runLater(new Runnable() {
 
-					@Override
-					public void run() {
-						if (receivedLine == null) { 
-							windowChat.appendText("Connection closed by Server. Bye\n");								
-								
+				public void run() {
+					// TODO Auto-generated method stub
+					if(receivedLine == null) { 
+						windowChat.appendText("Connection closed by Server. Bye\n");
+						try {
+							//On quitte le client:
+							stop();
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
 						}
+						Platform.exit();
+					}
+					else {
 						windowChat.appendText(receivedLine+"\n");
 					}
-					
 				}
-			);
+				
+			});
 		}
 	}
 

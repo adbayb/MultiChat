@@ -13,6 +13,11 @@ public class AppServer {
 	private Server serveur;
 	private InetAddress serverAddr;
 	
+	/**
+	 * @brief Préparation de l'execution du serveur
+	 * @param serverAddr Addresse ip qui va être associée au serveur
+	 * @param port Port qui va être associé au serveur
+	 */
 	public AppServer(InetAddress serverAddr, int port) {
 		this.port = port;
 		this.serveur = null;
@@ -29,6 +34,9 @@ public class AppServer {
 		}
 	}
 	
+	/**
+	 * @brief Execution du serveur classique
+	 */
 	public void execute() {
 		try {
 			//Serveur configuré Sans NIO:
@@ -40,7 +48,10 @@ public class AppServer {
 		
 		return;
 	}
-	
+
+	/**
+	 * @brief Execution du serveur NIO
+	 */
 	public void executeNIO() {
 		try {
 			//Serveur configuré Avec NIO:

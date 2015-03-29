@@ -1,6 +1,7 @@
 package controller.client;
 
 import model.client.Client;
+import model.client.ClientMulticast;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.scene.control.TextArea;
@@ -10,15 +11,16 @@ public class InputClientListener implements EventHandler<ActionEvent> {
 	private TextField saisie;
 	private TextArea windowChat;
 	private Client client;
+	private ClientMulticast clientMulticast;
 
 	
-	public InputClientListener(Client client, TextArea windowChat, TextField saisie) {
+	public InputClientListener(Client client, ClientMulticast clientMulticast, TextArea windowChat, TextField saisie) {
 		this.client = client;
+		this.clientMulticast = clientMulticast;
 		this.saisie = saisie;
 		this.windowChat = windowChat;
 	}
 	
-	@Override
 	public void handle(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		if(this.saisie.getText() != null) {
@@ -36,7 +38,10 @@ public class InputClientListener implements EventHandler<ActionEvent> {
 	            });
 				this.windowChat.autosize();*/
 				//On attache à notre socket client pour l'envoyer au serveur:
-				client.getEcriture().updateSaisie(saisie);
+				this.client.getEcriture().updateSaisie(saisie);
+			}
+			else if(this.client == null) {
+				this.clientMulticast.getEcriture().updateSaisie(saisie);
 			}
 			else {
 				this.windowChat.appendText("Error: Unconnected to Server\n");

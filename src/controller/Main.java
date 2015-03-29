@@ -21,9 +21,7 @@ public class Main {
 			"-s, -- server start the server\n";	
 	
 	public static void main(String[] args) {
-		//TODO Niébé:
-        //Gérer les cas GETOPT ici:
-		boolean nio = false, server=false, client = false;
+		boolean nio = false, server=false, client = false, multicast = false;
 		
 		Getopt g = new Getopt("MultiChat", args, "a:dhmnp:sc");
 		int c;
@@ -43,12 +41,11 @@ public class Main {
 				try {
 					Thread.sleep(5000);
 				} catch (InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				System.exit(0);
 			case 'm':
-				//TODO Ayoub : Lancer le client en multicast quand ca sera devoloppé
+				multicast = true;
 				break;
 			case 'n':
 				nio = true;
@@ -80,6 +77,12 @@ public class Main {
 	
 		if(client){
 			//new AppClient(HOST,PORT).execute();
+			if(multicast) {
+				MainClient.setISMULTICAST(true);
+			}
+			else {
+				MainClient.setISMULTICAST(false);
+			}
 			MainClient.setHOST(HOST);
 			MainClient.setPORT(PORT);
 			Application.launch(MainClient.class,args);
@@ -95,7 +98,11 @@ public class Main {
 			else{	
 				//-s -n pour lancer un serveur NIO:
 				MainServer.mainNIO();		
-			}			
+			}
 		}
+		/*MainClient.setISMULTICAST(true);
+		MainClient.setHOST(HOST);
+		MainClient.setPORT(PORT);
+		Application.launch(MainClient.class,args);*/
     }
 }

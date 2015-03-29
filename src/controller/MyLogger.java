@@ -15,8 +15,15 @@ public class MyLogger {
 	private static ConsoleAppender ca;
 	FileAppender fa;
 	
+	/**
+	 * @brief On initialise le logger selon les besoins de l'utilisateur (debug ou fichier)
+	 * @param infile booleen indiquant si on veut logger dans un fichier ou pas (console)
+	 */
 	public static void init(boolean infile){
 		if(!infile){
+			/**
+			 * Initialisation du log dans la console
+			 */
 			ca = new ConsoleAppender();
 			ca.setLayout(new SimpleLayout());
 			ca.activateOptions();
@@ -25,6 +32,9 @@ public class MyLogger {
 		}
 		else{
 			try {
+				/**
+				 * Initialisation du fichier de log (log.txt à la racine du workspace)
+				 */
 				FileAppender fa = new FileAppender(new XMLLayout(), "log.txt");
 				fa.setName("FichierLog");
 				logRoot.addAppender(fa);
@@ -39,6 +49,10 @@ public class MyLogger {
 
 	}		
 	
+	/**
+	 * @brief Log un message d'erreur
+	 * @param message
+	 */
 	public static final void errorMessage(String message){
 		logRoot = Logger.getLogger("MultiChat Logger");
 		logRoot.error(message);

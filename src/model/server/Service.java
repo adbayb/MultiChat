@@ -46,39 +46,21 @@ final class Service implements Runnable{
 		System.out.println("Nouveau client : " + this.socket.getInetAddress());
 		try {BufferedReader in = new BufferedReader (new InputStreamReader(socket.getInputStream ( )));
 		PrintWriter out = new PrintWriter (socket.getOutputStream (), true);
-		out.println("Welcome to the chat !!! (" + socket.getInetAddress() + " port : " + socket.getLocalPort() + ")");
+		out.println("Welcome to ADIB and SARR Tchat !!! (" + socket.getInetAddress() + " port : " + socket.getLocalPort() + ")");
+		out.flush();
 		
-		boolean messageConnection = true;
 		while (connected) {
 			// lit la ligne
 			String line = in.readLine();
 			if(line != null){
 				synchronized(lock){
-					//on recupere le contenu du message (sans le login et les chevrons) pour le traitement
-					/*String contenu = line.substring(line.lastIndexOf(">") + 2);
-					if(contenu.length() > 5){
-						System.out.println(contenu.substring(0,4));
-						if(contenu.substring(0,4).equals("nick")){
-							String nickName = contenu.substring(5,contenu.length());
-							this.nickname = nickName;
-							out.println("Nickname created : " + nickName);
-						}	
-						else{								
-							diffusionMessage(line, out, messageConnection);
-							messageConnection = false;
-						}
-					}
-					else{
-						diffusionMessage(line, out, messageConnection);
-						messageConnection = false;				
-					}*/
 					if(line.toLowerCase().contains("/nick ") == true) {
-						String nickname = line.replaceAll("(.*)/nick (.*)(\n)","$2");
+						String nickname = line.substring(line.indexOf("/nick ")+"/nick ".length(), line.length()-1);
 						this.nickname = nickname;
 						System.out.println("Added Nickname: "+nickname);
 					}
 					else{
-						diffusionMessage(line, out, messageConnection);
+						diffusionMessage(line, out);
 					}
 				}				
 			}
@@ -94,7 +76,7 @@ final class Service implements Runnable{
 		deconnection();
 	}
 	
-	public void diffusionMessage(String line, PrintWriter out, boolean messageConnection){		
+	public void diffusionMessage(String line, PrintWriter out){		
 		System.out.println("Service " + numero + " a recu : " + line);
 		boolean socketFermee = false;	//variable permettant de signaler si on peut ecrire sur une socket
 		for (int i = 0; i < autresClients.size(); i++){
