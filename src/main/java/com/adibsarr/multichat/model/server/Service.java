@@ -95,6 +95,7 @@ final class Service implements Runnable{
 	public void diffusionMessage(String line, PrintWriter out){		
 		System.out.println("Service " + numero + " a recu : " + line);
 		boolean socketFermee = false;	//variable permettant de signaler si on peut ecrire sur une socket
+		String buddyList = this.getBuddyList();
 		for (int i = 0; i < autresClients.size(); i++){
 			socketFermee = false;
 			try{
@@ -118,7 +119,7 @@ final class Service implements Runnable{
 				else{
 					msg = this.nickname + " said : " + line;					
 				}
-				out.println(msg);
+				out.println(buddyList+"\n"+msg);
 				out.flush();
 			}
 		}	
@@ -162,6 +163,25 @@ final class Service implements Runnable{
 	
 	protected void finalize() throws Throwable {
 		socket.close(); 
+	}
+	
+	private String getBuddyList() {
+		String msg = new String("/buddyList "+this.socket.getInetAddress()+ "-"+this.socket.getPort()+",");
+		
+		for (int i = 0; i < autresClients.size(); i++) {
+			msg = msg+"Guest" + autresClients.get(i).getInetAddress() 
+					+ "-" + autresClients.get(i).getPort()+",";
+		}
+		
+		return msg;
+	}
+
+	public String getNickname() {
+		return nickname;
+	}
+
+	public void setNickname(String nickname) {
+		this.nickname = nickname;
 	}
 
 }

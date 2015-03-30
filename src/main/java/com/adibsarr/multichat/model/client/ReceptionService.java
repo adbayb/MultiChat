@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
-import javafx.application.Platform;
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 
@@ -76,40 +73,35 @@ public class ReceptionService implements  Runnable {
 			//Ajout du service Platform.runLater car modification d'un élément GUI JavaFX or de son thread application:
 			//Platform.runLater permet donc d'ajouter les modifications graphique depuis un autre thread dans le thread JAVAFX Application
 			//de manière thread safe:
-			Platform.runLater(new Runnable() {
-
-				public void run() {
-					// TODO Auto-generated method stub
-					if(receivedLine == null) { 
-						windowChat.appendText("Connection closed by Server. Bye\n");
-						try {
-							//On quitte le client:
-							stop();
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
-						Platform.exit();
-					}
-					else {
-						if(receivedLine.contains("/buddyList ") == false) {
-							windowChat.appendText(receivedLine+"\n");
-						}
-						else {//BuddyList
-							ObservableList<String> bufferUserOnline = FXCollections.observableArrayList();
-							listUserOnline.setItems(null);
-							bufferUserOnline.clear();
-							String[] splitUserOnline = (receivedLine.substring("/buddyList ".length(), receivedLine.length()-1)).split(",");
-							for(String userOnline : splitUserOnline) {
-								bufferUserOnline.add(userOnline);
-							}
-							listUserOnline.setItems(bufferUserOnline);
-						}
-					}
+			//Platform.runLater bug fixé depuis Java1.8u40 donc inutile ici:
+			if(receivedLine == null) { 
+				windowChat.appendText("Connection closed by Server. Bye\n");
+				try {
+					this.stop();
+					System.exit(0);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-				
-			});
-			
+			}
+			else {
+				/*if(receivedLine.contains("/buddyList ") == false) {
+					windowChat.appendText(receivedLine+"\n");
+				}
+				else {//BuddyList
+					ObservableList<String> bufferUserOnline = FXCollections.observableArrayList();
+					listUserOnline.setItems(null);
+					bufferUserOnline.clear();
+					String[] splitUserOnline = (receivedLine.substring("/buddyList ".length(), receivedLine.length()-1)).split(",");
+					for(String userOnline : splitUserOnline) {
+						bufferUserOnline.add(userOnline);
+					}
+					listUserOnline.setItems(bufferUserOnline);
+				}*/
+				//Pour gérer notre BuddyList de façon optimale et permettre l'inclusion dans une listView via Platform.runLater(), il faut faire un thread à part entière côté serveur qui envoie des 
+				//requêtes aux clients chaque seconde par exemple pour détecter les clients connecté. Puis faire envoie des infos clients co à tous les clients.
+				windowChat.appendText(receivedLine+"\n");
+			}
 		}
 	}
 

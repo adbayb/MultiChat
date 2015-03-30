@@ -48,15 +48,14 @@ public class Client {
 	 */
 	public void stop(){
 		try {
+			this.socket.shutdownOutput();
+			this.socket.shutdownInput();
+			this.socket.close();
 			this.lecture.stop();
-		} catch (IOException e) {
-			MyLogger.errorMessage(e.getMessage());
+		} catch (IOException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
 		}
-		//Inutile car l'input associé au socket est déjà fermé par le thread: 
-		//le socket est alors automatiquement fermé lorsqu'un de ces flux est fermé:
-		/*this.socket.shutdownOutput();
-		this.socket.shutdownInput();
-		this.socket.close();*/
 		System.exit(0);
 	}
 

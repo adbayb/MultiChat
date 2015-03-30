@@ -86,15 +86,18 @@ public class ServiceNIO {
 			if(sKey.isValid() && sKey.channel() instanceof SocketChannel) {
 				SocketChannel socketChannel = (SocketChannel)sKey.channel();
 				if(socketChannel != null) {
-					//Inutile de diffuser le message vers le client qui l'a composé:
-					if(socketChannel != excludeChannel) {
-						//this.diffuserNick(msg, excludeChannel): String :
-						//Récupération du nickname client responsable de l'envoi (excludeChannel):
-						msgBuffer = ByteBuffer.wrap(this.diffuserNick(msg, excludeChannel).getBytes());
-						//Broadcast du message à tous les channels rattachés aux divers sockets clients connectés:
-						socketChannel.write(msgBuffer);
-						//Nettoyage du buffer:
-						msgBuffer.clear();
+					if(socketChannel.isRegistered()) {
+						//Inutile de diffuser le message vers le client qui l'a composé:
+						if(socketChannel != excludeChannel) {
+							//this.diffuserNick(msg, excludeChannel): String :
+							//Récupération du nickname client responsable de l'envoi (excludeChannel):
+							String message = this.getBuddyList()+"\n"+this.diffuserNick(msg, excludeChannel);
+							msgBuffer = ByteBuffer.wrap(message.getBytes());
+							//Broadcast du message à tous les channels rattachés aux divers sockets clients connectés:
+							socketChannel.write(msgBuffer);
+							//Nettoyage du buffer:
+							msgBuffer.clear();
+						}
 					}
 				}
 			}
