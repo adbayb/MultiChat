@@ -6,8 +6,6 @@ import java.net.Socket;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
 
-import com.adibsarr.multichat.controller.MyLogger;
-
 public class Client {
 	//Un client est définit par les services de lecture et Ecriture 
 	private ReceptionService lecture;

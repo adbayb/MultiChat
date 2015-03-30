@@ -66,7 +66,7 @@ final class Service implements Runnable{
 			if(line != null){
 				synchronized(lock){
 					if(line.toLowerCase().contains("/nick ") == true) {
-						String nickname = line.substring(line.indexOf("/nick ")+"/nick ".length(), line.length()-1);
+						String nickname = line.substring(line.indexOf("/nick ")+"/nick ".length(), line.length());
 						this.nickname = nickname;
 						System.out.println("Added Nickname: "+nickname);
 					}
